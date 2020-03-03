@@ -46,7 +46,7 @@ if __name__ == '__main__':
         node = "https://lambda-treasure-hunt.herokuapp.com/api/bc"
 
     headers = {'Content-Type': 'application/json',
-               'Authorization': 'Token e9ec9a2dab95a02a549eb753f6eea0b680313347'}
+               'Authorization': 'Token INSERT_TOKEN_HERE'}
     coins_mined = 0
     # Run forever until interrupted
     while True:
