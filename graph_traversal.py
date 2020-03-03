@@ -23,7 +23,7 @@ if __name__ == '__main__':
     graph={}
     last_room=None
     headers =  {'Content-Type' : 'application/json',
-             'Authorization': 'Token f743554cfb4df8af04f22b573707288bc030f636'}
+             'Authorization': 'Token e9ec9a2dab95a02a549eb753f6eea0b680313347'}
     r = requests.get(url=node + "/init", headers=headers)
 
     while True:
@@ -31,7 +31,7 @@ if __name__ == '__main__':
         print('Graph: ', graph)
         print('\n')
         data = r.json()
-        if data.get('title') == "Pirate Ry's":
+        if data.get('room_id') == 456:
             break
         time.sleep(data.get('cooldown'))
         exits = data.get('exits')
