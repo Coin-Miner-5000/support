@@ -22,7 +22,7 @@ if __name__ == '__main__':
     path=[]
     graph={}
     last_room=None
-    headers =  {'Content-Type' : 'application/json', 
+    headers =  {'Content-Type' : 'application/json',
              'Authorization': 'Token f743554cfb4df8af04f22b573707288bc030f636'}
     r = requests.get(url=node + "/init", headers=headers)
 
@@ -31,11 +31,13 @@ if __name__ == '__main__':
         print('Graph: ', graph)
         print('\n')
         data = r.json()
+        if data.get('title') == "Pirate Ry's":
+            break
         time.sleep(data.get('cooldown'))
         exits = data.get('exits')
         room_id = data.get('room_id')
         print('Room ID: ', room_id)
-        
+
         if room_id not in graph:
             graph[room_id] = {"title": data.get('title'), "description": data.get('description'), "terrain": data.get('terrain'), "coordinates": data.get('coordinates'), "elevation": data.get('elevation')}
             for dir in exits:
@@ -58,8 +60,7 @@ if __name__ == '__main__':
         else:
             wayForward = unexploredExits[0]
             path.append(wayForward)
-            last_room = room_id  
+            last_room = room_id
             r = requests.post(url=node + "/move", json={"direction": wayForward}, headers=headers)
-              
 
-     
+
