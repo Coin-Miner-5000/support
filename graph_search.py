@@ -1,8 +1,8 @@
 from graph import graph_of_map
+# from underworld_graph import underworld_graph as graph_of_map
 import requests
 import sys
 import time
-# from miner import mine
 import os
 
 def BFS(current_room, destination_room):
@@ -48,8 +48,9 @@ def BFS(current_room, destination_room):
 
 if __name__ == '__main__':
     node = "https://lambda-treasure-hunt.herokuapp.com/api/adv"
+    KEY = os.environ.get("API_KEY")
     headers =  {'Content-Type' : 'application/json',
-            'Authorization': 'Token INSERT_TOKEN_HERE'}
+             'Authorization': f"Token {os.environ.get(KEY)}"}
     r = requests.get(url=node + "/init", headers=headers)
 
     data = r.json()
@@ -83,11 +84,6 @@ if __name__ == '__main__':
     if action == None:
         move_to_room(destination_room, data)
 
-    # if action == "recall":
-    #     recall()
-    # elif action == "mine":
-    #     # move_to_room(destination_room, data)
-    #     os.system("python miner.py")
 
     elif action == "mine":
         while True:
@@ -100,12 +96,16 @@ if __name__ == '__main__':
             ls8_instructions = well_data.get('description')
 
             r = requests.post("https://afternoon-springs-84709.herokuapp.com/ls8", json={"description": ls8_instructions})
+
             ls8_data = r.json()
             r = requests.get(url=node + "/init", headers=headers)
             data = r.json()
+            print(f"Moving to room {ls8_data.get('room')} to mine. ⛏")
             move_to_room(ls8_data.get('room'), data)
 
             os.system("python miner.py")
             print("Coin mined! Let's do it again.")
+            time.sleep(20)
+
 
     sys.exit(0)

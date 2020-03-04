@@ -5,8 +5,9 @@ import time
 import sys
 import json
 import random
+import os
 
-def proof_of_work(block):
+def proof_of_work(block, diff):
     """
     Simple Proof of Work Algorithm
     Stringify the block and look for a proof.
@@ -16,13 +17,13 @@ def proof_of_work(block):
     """
     # block_string = json.dumps(block, sort_keys=True)
     proof = random.random()
-    while valid_proof(block, proof) is False:
+    while valid_proof(block, proof, diff) is False:
         proof += 1
 
     return proof
 
 
-def valid_proof(block_string, proof):
+def valid_proof(block_string, proof, diff):
     """
     Validates the Proof:  Does hash(block_string, proof) contain 6
     leading zeroes?  Return true if the proof is valid
@@ -36,18 +37,16 @@ def valid_proof(block_string, proof):
     guess = f"{block_string}{proof}".encode()
     guess_hash = hashlib.sha256(guess).hexdigest()
     # return True or False
-    return guess_hash[:6] == "000000"
+    return guess_hash[:diff] == "0" * diff
 
 
-# if __name__ == '__main__':
-#     if len(sys.argv) > 1:
-#         node = sys.argv[1]
-#     else:
+
 node = "https://lambda-treasure-hunt.herokuapp.com/api/bc"
 
-headers = {'Content-Type': 'application/json',
-            'Authorization': 'Token e9ec9a2dab95a02a549eb753f6eea0b680313347'}
-coins_mined = 0
+KEY = os.environ.get("API_KEY")
+headers =  {'Content-Type' : 'application/json',
+    'Authorization': f"Token {os.environ.get(KEY)}"}
+
 # Run forever until interrupted
 while True:
     start_time = perf_counter()
@@ -65,8 +64,8 @@ while True:
     print(data2)
     last_proof = data2.get('proof')
     # data2["proof"]
-    # diff = data["difficulty"]
-    new_proof = proof_of_work(last_proof)
+    diff = data2.get('difficulty')
+    new_proof = proof_of_work(last_proof, diff)
 
     post_data = {"proof": new_proof}
 
