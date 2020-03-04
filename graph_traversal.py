@@ -31,7 +31,7 @@ if __name__ == '__main__':
         print('Graph: ', graph)
         print('\n')
         data = r.json()
-        if data.get('room_id') == 456:
+        if data.get('room_id') == 468:
             break
         time.sleep(data.get('cooldown'))
         exits = data.get('exits')

@@ -6,7 +6,7 @@ import sys
 import json
 import random
 
-def proof_of_work(block, diff):
+def proof_of_work(block):
     """
     Simple Proof of Work Algorithm
     Stringify the block and look for a proof.
@@ -16,13 +16,13 @@ def proof_of_work(block, diff):
     """
     # block_string = json.dumps(block, sort_keys=True)
     proof = random.random()
-    while valid_proof(block, proof, diff) is False:
+    while valid_proof(block, proof) is False:
         proof += 1
 
     return proof
 
 
-def valid_proof(block_string, proof, diff):
+def valid_proof(block_string, proof):
     """
     Validates the Proof:  Does hash(block_string, proof) contain 6
     leading zeroes?  Return true if the proof is valid
@@ -36,7 +36,7 @@ def valid_proof(block_string, proof, diff):
     guess = f"{block_string}{proof}".encode()
     guess_hash = hashlib.sha256(guess).hexdigest()
     # return True or False
-    return guess_hash[:diff] == "0" * diff
+    return guess_hash[:6] == "000000"
 
 
 if __name__ == '__main__':
@@ -46,7 +46,7 @@ if __name__ == '__main__':
         node = "https://lambda-treasure-hunt.herokuapp.com/api/bc"
 
     headers = {'Content-Type': 'application/json',
-               'Authorization': 'Token INSERT_TOKEN_HERE'}
+               'Authorization': 'Token e9ec9a2dab95a02a549eb753f6eea0b680313347'}
     coins_mined = 0
     # Run forever until interrupted
     while True:
@@ -64,8 +64,8 @@ if __name__ == '__main__':
         # TODO: Get the block from `data` and use it to look for a new proof
         print(data)
         last_proof = data["proof"]
-        diff = data["difficulty"]
-        new_proof = proof_of_work(last_proof, diff)
+        # diff = data["difficulty"]
+        new_proof = proof_of_work(last_proof)
 
         post_data = {"proof": new_proof}
 
