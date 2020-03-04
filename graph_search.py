@@ -22,12 +22,11 @@ def BFS(current_room, destination_room):
 
         if node not in visited:
             visited.add(node)
-
             exits = []
             for dir in ["n", "s", "e", "w"]:
                 if dir in graph_of_map[node]:
                     exits.append(dir)
-
+                    
             for dir in exits:
                 next_room = graph_of_map[node][dir]
                 if next_room not in visited and did_find_room == False:
@@ -43,6 +42,7 @@ def BFS(current_room, destination_room):
                     else:
                         directions.append(next_added_path)
                         room_ids.append(new_path)
+
 
 
 
@@ -109,3 +109,4 @@ if __name__ == '__main__':
 
 
     sys.exit(0)
+
