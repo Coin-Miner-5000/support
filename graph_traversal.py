@@ -1,7 +1,7 @@
 import hashlib
 import requests
 import time
-
+import os
 import sys
 
 from uuid import uuid4
@@ -18,12 +18,13 @@ if __name__ == '__main__':
         node = "https://lambda-treasure-hunt.herokuapp.com/api/adv"
 
     opposites = {'n': 's', 's': 'n', 'e': 'w', 'w': 'e'}
-    path = []
-    graph = {}
-    last_room = None
-    headers = {'Content-Type': 'application/json',
-               'Authorization': 'Token 50f83144a74d87d4dbe9230f7714c1ceb54d55b0'}
 
+    path=[]
+    graph={}
+    last_room=None
+    KEY = os.environ.get("API_KEY")
+    headers =  {'Content-Type' : 'application/json',
+             'Authorization': f"Token {os.environ.get(KEY)}"}
     r = requests.get(url=node + "/init", headers=headers)
 
     while True:
@@ -31,6 +32,8 @@ if __name__ == '__main__':
         print('Graph: ', graph)
         print('\n')
         data = r.json()
+        # if data.get('room_id') == 468:
+        #     break
 
         time.sleep(data.get('cooldown'))
         exits = data.get('exits')
@@ -47,6 +50,12 @@ if __name__ == '__main__':
         #     break
         # if len(data.get('items')) > 0 or data.get('title') == "Sandofsky's Sanctum":
         #     print("Welcome to your room!")
+        #     break
+
+        # if len(data.get('items')) > 0:
+        #     break
+
+        # if len(data.get('items')) > 0:
         #     break
 
         if room_id not in graph:
