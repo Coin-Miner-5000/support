@@ -89,8 +89,6 @@ if __name__ == '__main__':
     #     # move_to_room(destination_room, data)
     #     os.system("python miner.py")
 
-
-
     elif action == "mine":
         while True:
             time.sleep(data.get('cooldown'))
@@ -108,10 +106,6 @@ if __name__ == '__main__':
             move_to_room(ls8_data.get('room'), data)
 
             os.system("python miner.py")
-            print('THE CODE BROKE BRO (GOOD BREAK)')
-
-
-
-
+            print("Coin mined! Let's do it again.")
 
     sys.exit(0)
