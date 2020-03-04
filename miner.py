@@ -39,38 +39,43 @@ def valid_proof(block_string, proof, diff):
     return guess_hash[:diff] == "0" * diff
 
 
-if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        node = sys.argv[1]
-    else:
-        node = "https://lambda-treasure-hunt.herokuapp.com/api/bc"
+# if __name__ == '__main__':
+#     if len(sys.argv) > 1:
+#         node = sys.argv[1]
+#     else:
+node = "https://lambda-treasure-hunt.herokuapp.com/api/bc"
 
-    headers = {'Content-Type': 'application/json',
-               'Authorization': 'Token INSERT_TOKEN_HERE'}
-    coins_mined = 0
-    # Run forever until interrupted
-    while True:
-        start_time = perf_counter()
-        r = requests.get(url=node + "/last_proof", headers=headers)
-        # Handle non-json response
-        try:
-            data = r.json()
-        except ValueError:
-            print("Error:  Non-json response")
-            print("Response returned:")
-            print(r)
-            break
+headers = {'Content-Type': 'application/json',
+            'Authorization': 'Token f743554cfb4df8af04f22b573707288bc030f636'}
+coins_mined = 0
+# Run forever until interrupted
+while True:
+    start_time = perf_counter()
+    r = requests.get(url=node + "/last_proof", headers=headers)
+    # Handle non-json response
+    try:
+        data2 = r.json()
+    except ValueError:
+        print("Error:  Non-json response")
+        print("Response returned:")
+        print(r)
+        break
 
-        # TODO: Get the block from `data` and use it to look for a new proof
-        print(data)
-        last_proof = data["proof"]
-        diff = data["difficulty"]
-        new_proof = proof_of_work(last_proof, diff)
+    # TODO: Get the block from `data` and use it to look for a new proof
+    print(data2)
+    last_proof = data2.get('proof')
+    # data2["proof"]
+    # diff = data["difficulty"]
+    diff = data2.get("difficulty")
+    new_proof = proof_of_work(last_proof, diff)
 
-        post_data = {"proof": new_proof}
+    post_data = {"proof": new_proof}
 
-        r = requests.post(url=node + "/mine", json=post_data, headers=headers)
-        data = r.json()
+    r = requests.post(url=node + "/mine", json=post_data, headers=headers)
+    data3 = r.json()
 
-        print(data)
-        time.sleep(data.get('cooldown'))
+    if data3.get('messages') == ['New Block Forged']:
+        break
+
+    print(data3)
+    time.sleep(data3.get('cooldown'))
